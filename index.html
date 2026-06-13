@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BARMAN X</title>
+
+<meta name="description" content="WAIT FOR THE UNREAL">
+<meta name="theme-color" content="#040608">
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#040608;
+    --text:#F8FAFC;
+    --muted:#7F8EA3;
+
+    --blue:#3B82F6;
+    --blue-soft:#8AB4FF;
+
+    --white:#FFFFFF;
+    --red:#FF6B6B;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans',sans-serif;
+    text-transform:uppercase;
+    cursor:none;
+}
+
+/* STAR CANVAS */
+#space{
+    position:fixed;
+    inset:0;
+    z-index:0;
+}
+
+/* SOFT SINGULARITY GLOW */
+.singularity{
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:500px;
+    height:500px;
+
+    transform:translate(-50%,-50%);
+
+    background:radial-gradient(
+        circle,
+        rgba(0,0,0,1) 10%,
+        rgba(59,130,246,.18) 35%,
+        rgba(10,20,40,.08) 55%,
+        transparent 75%
+    );
+
+    filter:blur(35px);
+
+    z-index:0;
+
+    animation:pulse 10s ease-in-out infinite;
+}
+
+@keyframes pulse{
+    0%,100%{
+        transform:translate(-50%,-50%) scale(1);
+    }
+    50%{
+        transform:translate(-50%,-50%) scale(1.05);
+    }
+}
+
+/* CURSOR */
+.cursor{
+    position:fixed;
+    width:18px;
+    height:18px;
+    border:1px solid rgba(138,180,255,.8);
+    border-radius:50%;
+    pointer-events:none;
+    transform:translate(-50%,-50%);
+    z-index:9999;
+}
+
+/* HERO */
+.hero{
+    position:relative;
+    z-index:2;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.logo{
+    font-family:'Manrope',sans-serif;
+    font-size:clamp(4rem,10vw,8rem);
+    font-weight:800;
+    letter-spacing:.22em;
+
+    text-shadow:
+        0 0 20px rgba(59,130,246,.20),
+        0 0 60px rgba(59,130,246,.10);
+}
+
+.motto{
+    margin-top:1.5rem;
+    font-family:'Manrope',sans-serif;
+    font-size:clamp(1rem,2vw,1.3rem);
+    letter-spacing:.6em;
+    color:var(--blue-soft);
+
+    text-shadow:
+        0 0 20px rgba(138,180,255,.10);
+}
+
+.founder{
+    margin-top:4rem;
+    font-size:.8rem;
+    letter-spacing:.45em;
+    color:var(--muted);
+
+    text-shadow:
+        0 0 12px rgba(138,180,255,.08);
+}
+
+/* FOOTER */
+.footer{
+    position:fixed;
+    bottom:26px;
+    width:100%;
+    text-align:center;
+
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+
+    font-size:.65rem;
+    letter-spacing:.35em;
+
+    color:var(--muted);
+}
+
+/* FADE */
+.fade{
+    opacity:0;
+    transform:translateY(18px);
+    animation:fadeUp 1.2s ease forwards;
+}
+
+.motto{animation-delay:.4s;}
+.founder{animation-delay:.8s;}
+
+@keyframes fadeUp{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="space"></canvas>
+
+<div class="singularity"></div>
+
+<div class="cursor"></div>
+
+<div class="hero">
+
+<div>
+
+<div class="logo fade">BARMAN X</div>
+
+<div class="motto fade">WAIT FOR THE UNREAL</div>
+
+<div class="founder fade">FOUNDED BY KINSHUK BARMAN</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+<div>BARMAN X · 2026</div>
+<div>© 2026–PRESENT · ALL RIGHTS RESERVED</div>
+</div>
+
+<script>
+
+/* CURSOR */
+const cursor=document.querySelector('.cursor');
+
+window.addEventListener('mousemove',(e)=>{
+    cursor.style.left=e.clientX+'px';
+    cursor.style.top=e.clientY+'px';
+});
+
+/* STARFIELD */
+const canvas=document.getElementById('space');
+const ctx=canvas.getContext('2d');
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const stars=[];
+
+for(let i=0;i<280;i++){
+
+    const r=Math.random();
+
+    let color;
+
+    if(r<0.92) color='#FFFFFF';
+    else if(r<0.98) color='#8AB4FF';
+    else color='#FF6B6B';
+
+    stars.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*1.4,
+        s:0.05+Math.random()*0.2,
+        c:color
+    });
+}
+
+function animate(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    for(const s of stars){
+
+        ctx.beginPath();
+        ctx.fillStyle=s.c;
+
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fill();
+
+        s.y+=s.s;
+
+        if(s.y>canvas.height){
+            s.y=-5;
+            s.x=Math.random()*canvas.width;
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+/* RESIZE */
+window.addEventListener('resize',()=>{
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+});
+
+</script>
+
+</body>
+</html>
